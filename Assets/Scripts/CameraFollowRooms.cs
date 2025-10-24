@@ -2,9 +2,8 @@ using UnityEngine;
 
 public class CameraFollowRooms : MonoBehaviour
 {
-    public Transform targetPosition;
+    Transform targetPosition;
     public float moveSpeed = 5.0f;
-
     private bool isMoving = false;
 
     void Update()
@@ -12,13 +11,13 @@ public class CameraFollowRooms : MonoBehaviour
         if (isMoving && targetPosition != null)
         {
             transform.position = Vector3.Lerp(transform.position, targetPosition.position, Time.deltaTime * moveSpeed);
-        }
 
-        // clamp value if it is close enough to target
-        if (Vector3.Distance(transform.position, targetPosition.position) < 0.05f) 
-        {
-            transform.position = targetPosition.position;
-            isMoving = false;
+            // clamp value if it is close enough to target
+            if (Vector3.Distance(transform.position, targetPosition.position) < 0.05f)
+            {
+                transform.position = targetPosition.position;
+                isMoving = false;
+            }
         }
     }
 
