@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        speed = 500.0f;
+        speed = 300.0f;
         rb = GetComponent<Rigidbody2D>();
 
         inRoomA = true;

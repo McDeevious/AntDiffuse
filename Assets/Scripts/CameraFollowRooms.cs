@@ -13,7 +13,7 @@ public class CameraFollowRooms : MonoBehaviour
             transform.position = Vector3.Lerp(transform.position, targetPosition.position, Time.deltaTime * moveSpeed);
 
             // clamp value if it is close enough to target
-            if (Vector3.Distance(transform.position, targetPosition.position) < 0.05f)
+            if (Vector3.Distance(transform.position, targetPosition.position) < 0.01f)
             {
                 transform.position = targetPosition.position;
                 isMoving = false;
