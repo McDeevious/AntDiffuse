@@ -1,5 +1,7 @@
 using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Collections;
 
 public class SlidePuzzleScript : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class SlidePuzzleScript : MonoBehaviour
     private List<Transform> pieces;
     private int emptyLocation;
     private int size;
+    private bool isShuffling = false;
     
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -21,7 +24,90 @@ public class SlidePuzzleScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!isShuffling && CheckCompletion())
+        {
+            isShuffling = true;
+            StartCoroutine(WaitShuffle(0.5f));
+        }
         
+        if(Input.GetMouseButtonDown(0))
+        {
+            RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+            if (hit)
+            {
+                for (int i = 0; i < pieces.Count; i++)
+                {
+                    if (pieces[i] == hit.transform)
+                    {
+                        if (SwapIfValid(i, -size, size)) {  break; }
+                        if (SwapIfValid(i, +size, size)) { break; }
+                        if (SwapIfValid(i, -1, 0)) { break; }
+                        if (SwapIfValid(i, +1, size - 1)) { break; }
+                    }
+                }
+            }
+        }
+    }
+
+    private bool CheckCompletion()
+    {
+        for (int i = 0; i < pieces.Count; i++)
+        {
+            if (pieces[i].name != $"{i}")
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private IEnumerator WaitShuffle(float duration)
+    {
+        yield return new WaitForSeconds(duration);
+        Shuffle();
+        isShuffling = false;
+    }
+    
+    private void Shuffle()
+    {
+        int count = 0;
+        int last = 0;
+        while (count < (size * size * size))
+        {
+            int rand = Random.Range(0, size * size);
+            if (rand == last) { continue; }
+            last = emptyLocation;
+
+            if (SwapIfValid(rand, -size, size))
+            {
+                count++;
+            }
+            else if (SwapIfValid(rand, +size, size))
+            {
+                count++;
+            }
+            else if (SwapIfValid(rand, -1, 0))
+            {
+                count++;
+            }
+            else if (SwapIfValid(rand, +1, size - 1))
+            {
+                count++;
+            }
+        }
+    }
+
+    private bool SwapIfValid(int i, int offset, int colCheck)
+    {
+        if(((i % size) != colCheck) && ((i + offset) == emptyLocation))
+        {
+            // Valid move so therefore swap can occur
+            (pieces[i], pieces[i + offset]) = (pieces[i + offset], pieces[i]);
+            (pieces[i].localPosition, pieces[i + offset].localPosition) = (pieces[i + offset].localPosition, pieces[i].localPosition);
+            emptyLocation = i;
+            return true;
+        }
+        return false;
     }
 
     void CreateGamePieces(float gap)
@@ -32,6 +118,8 @@ public class SlidePuzzleScript : MonoBehaviour
             for (int j = 0; j < size; j++)
             {
                 Transform piece = Instantiate(piecePrefab, gameTransform);
+                pieces.Add(piece);
+
                 piece.localPosition = new Vector3(-1 + (2 * width * j) + width, 1 - (2 * width * i) - width, 0);
                 piece.localScale = ((2 * width) - gap) * Vector3.one;
                 piece.name = $"{(i * size) + j}";
