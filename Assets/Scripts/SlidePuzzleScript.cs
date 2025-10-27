@@ -1,5 +1,4 @@
-using NUnit.Framework;
-using UnityEngine;
+﻿using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 
@@ -7,30 +6,52 @@ public class SlidePuzzleScript : MonoBehaviour
 {
     [SerializeField] Transform gameTransform;
     [SerializeField] Transform piecePrefab;
+    public SpriteRenderer displayNum;
 
     private List<Transform> pieces;
     private int emptyLocation;
     private int size;
+
     private bool isShuffling = false;
-    
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    private bool isCompleted = false; // ✅ new flag to stop interaction after completion
+
     void Start()
     {
+        if (displayNum != null)
+        {
+            Color c = displayNum.color;
+            c.a = 0f; // set alpha to 0
+            displayNum.color = c;
+        }
+
         pieces = new List<Transform>();
         size = 3;
         CreateGamePieces(0.01f);
+
+        // ✅ Shuffle only once at the start
+        Shuffle();
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (!isShuffling && CheckCompletion())
+        // ✅ Don't process input if puzzle completed
+        if (isCompleted || isShuffling)
+            return;
+
+        // ✅ Check for completion only if not already completed
+        if (CheckCompletion())
         {
-            isShuffling = true;
-            StartCoroutine(WaitShuffle(0.5f));
+            isCompleted = true;
+
+            Color c = displayNum.color;
+            c.a = 1f; // set alpha to 0
+            displayNum.color = c;
+
+            Debug.Log("Puzzle completed!");
+            return; // ✅ do NOT reshuffle after completion
         }
-        
-        if(Input.GetMouseButtonDown(0))
+
+        if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
             if (hit)
@@ -39,7 +60,7 @@ public class SlidePuzzleScript : MonoBehaviour
                 {
                     if (pieces[i] == hit.transform)
                     {
-                        if (SwapIfValid(i, -size, size)) {  break; }
+                        if (SwapIfValid(i, -size, size)) { break; }
                         if (SwapIfValid(i, +size, size)) { break; }
                         if (SwapIfValid(i, -1, 0)) { break; }
                         if (SwapIfValid(i, +1, size - 1)) { break; }
@@ -61,15 +82,9 @@ public class SlidePuzzleScript : MonoBehaviour
         return true;
     }
 
-    private IEnumerator WaitShuffle(float duration)
-    {
-        yield return new WaitForSeconds(duration);
-        Shuffle();
-        isShuffling = false;
-    }
-    
     private void Shuffle()
     {
+        isShuffling = true;
         int count = 0;
         int last = 0;
         while (count < (size * size * size))
@@ -95,11 +110,12 @@ public class SlidePuzzleScript : MonoBehaviour
                 count++;
             }
         }
+        isShuffling = false;
     }
 
     private bool SwapIfValid(int i, int offset, int colCheck)
     {
-        if(((i % size) != colCheck) && ((i + offset) == emptyLocation))
+        if (((i % size) != colCheck) && ((i + offset) == emptyLocation))
         {
             // Valid move so therefore swap can occur
             (pieces[i], pieces[i + offset]) = (pieces[i + offset], pieces[i]);
