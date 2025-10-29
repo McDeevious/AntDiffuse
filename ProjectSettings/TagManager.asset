@@ -6,6 +6,8 @@ TagManager:
   tags:
   - RoomB
   - RoomA
+  - BrokenWire
+  - ConnectedWire
   layers:
   - Default
   - TransparentFX
