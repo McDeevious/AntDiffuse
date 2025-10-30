@@ -4,6 +4,8 @@ using System.Collections;
 
 public class SlidePuzzleScript : MonoBehaviour
 {
+    AudioManager audioManager;
+    
     [SerializeField] Transform gameTransform;
     [SerializeField] Transform piecePrefab;
     public SpriteRenderer displayNum;
@@ -13,7 +15,14 @@ public class SlidePuzzleScript : MonoBehaviour
     private int size;
 
     private bool isShuffling = false;
-    private bool isCompleted = false; // ✅ new flag to stop interaction after completion
+    private bool isCompleted = false;
+    private bool firstMoveDone = false; // Flag for audio purposes (so you do not go deaf at the start of the game)
+
+    private void Awake()
+    {
+        // Enter this line in therefore do not need to drag in object to reference
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
 
     void Start()
     {
@@ -30,6 +39,7 @@ public class SlidePuzzleScript : MonoBehaviour
 
         // ✅ Shuffle only once at the start
         Shuffle();
+        firstMoveDone = true;
     }
 
     void Update()
@@ -121,6 +131,12 @@ public class SlidePuzzleScript : MonoBehaviour
             (pieces[i], pieces[i + offset]) = (pieces[i + offset], pieces[i]);
             (pieces[i].localPosition, pieces[i + offset].localPosition) = (pieces[i + offset].localPosition, pieces[i].localPosition);
             emptyLocation = i;
+
+            if (firstMoveDone)
+            {
+                audioManager.PlaySFX(audioManager.moveTile);
+            }
+
             return true;
         }
         return false;

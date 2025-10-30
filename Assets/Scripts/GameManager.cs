@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -27,10 +28,16 @@ public class GameManager : MonoBehaviour
         else if (remainingTime < 0)
         {
             remainingTime = 0;
+            SceneManager.LoadScene("GameOver");
         }
 
         int minutes = Mathf.FloorToInt(remainingTime / 60); // To calculate the minutes from the time
         int seconds = Mathf.FloorToInt(remainingTime % 60); // To calculate the seconds from the time
         timerText.text = string.Format("{0:0}:{1:00}", minutes, seconds);
+    }
+
+    public void DisarmBomb()
+    {
+        SceneManager.LoadScene("Win");
     }
 }
