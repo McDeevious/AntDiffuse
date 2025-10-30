@@ -10,6 +10,6 @@ public class StartManager : MonoBehaviour
 
     public void QuitGame()
     {
-        // Quit to desktop here
+        Application.Quit();
     }
 }
