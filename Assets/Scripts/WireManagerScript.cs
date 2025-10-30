@@ -5,12 +5,19 @@ using System.Linq;
 
 public class WireManagerScript : MonoBehaviour
 {
+    AudioManager audioManager;
+    
     [SerializeField] SpriteRenderer displayNum;
     [SerializeField] List<GameObject> correctOrder;
     private List<GameObject> currentOrder;
 
     public int wireCount = 0;
-    
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -27,6 +34,8 @@ public class WireManagerScript : MonoBehaviour
         {
             CheckOrder();
         }
+
+        audioManager.PlaySFX(audioManager.wireSnip);
     }
 
     private void CheckOrder()

@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class KeypadScript : MonoBehaviour
 {
+    // Audio
+    AudioManager audioManager;
+    
     // Buttons and input
     public TMP_InputField charHolder;
     public GameObject button1;
@@ -32,6 +35,11 @@ public class KeypadScript : MonoBehaviour
     private Image inputBackground;
     private Color originalColor;
 
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         // Get the TMP_InputField background image
@@ -47,6 +55,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "1";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -55,6 +64,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "2";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -63,6 +73,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "3";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -71,6 +82,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "4";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -79,6 +91,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "5";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -87,6 +100,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "6";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -95,6 +109,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "7";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -103,6 +118,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "8";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -111,6 +127,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "9";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -119,6 +136,7 @@ public class KeypadScript : MonoBehaviour
         if (charHolder.text.Length < 3 && !isSolved)
         {
             charHolder.text += "0";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -127,6 +145,7 @@ public class KeypadScript : MonoBehaviour
         if (!isSolved)
         {
             charHolder.text = "";
+            audioManager.PlaySFX(audioManager.keypad);
         }
     }
 
@@ -138,6 +157,7 @@ public class KeypadScript : MonoBehaviour
             doorCollider.enabled = false;
             doorSprite.enabled = false;
             isSolved = true;
+            audioManager.PlaySFX(audioManager.keypad);
         }
         else
         {

@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class PipeScript : MonoBehaviour
 {
+    AudioManager audioManager;
+
     float[] rotations = { 0, 90, 180, 270 };
 
     public float[] correctRotation;
@@ -13,6 +15,7 @@ public class PipeScript : MonoBehaviour
     {
         // Find and reference the pipe game manager script
         gameManager = GameObject.Find("PipeGameManager").GetComponent<PipeGameManager>();
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
     }
 
     private void Start()
@@ -39,6 +42,8 @@ public class PipeScript : MonoBehaviour
         transform.Rotate(new Vector3(0, 0, 90));
         // Avoid rounding errors in computations
         transform.eulerAngles = new Vector3(0, 0, Mathf.Round(transform.eulerAngles.z));
+
+        audioManager.PlaySFX(audioManager.pipeMove);
 
         for (int i = 0; i < correctRotation.Length; i++)
         {
