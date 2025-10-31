@@ -7,6 +7,10 @@ public class PlayerController : MonoBehaviour
     private float horizontal;
     private float vertical;
 
+    // Animation
+    public Animator animator;
+    public SpriteRenderer playerSprite;
+
     // Handle Location
     [SerializeField] Camera cam;
     private bool inRoomA;
@@ -27,6 +31,24 @@ public class PlayerController : MonoBehaviour
     {
         horizontal = Input.GetAxis("Horizontal");
         vertical = Input.GetAxis("Vertical");
+
+        // Handle animation
+        if (horizontal != 0 || vertical != 0)
+        {
+            animator.SetBool("isMoving", true);
+            if (horizontal <= 0)
+            {
+                playerSprite.flipX = true;
+            }
+            else if (horizontal >= 0)
+            {
+                playerSprite.flipX = false;
+            }
+        }
+        else
+        {
+            animator.SetBool("isMoving", false);
+        }
     }
 
     private void FixedUpdate()
